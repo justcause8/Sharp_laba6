@@ -33,34 +33,17 @@ namespace laba6
                    Power
                );
 
-            var stringFormat = new StringFormat();
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
+            var stringFormat = new StringFormat(); // создаем экземпляр класса
+            stringFormat.Alignment = StringAlignment.Center; // выравнивание по горизонтали
+            stringFormat.LineAlignment = StringAlignment.Center; // выравнивание по вертикали
 
-            // обязательно выносим текст и шрифт в переменные
-            var text = $"Я гравитон\nc силой {Power}";
-            var font = new Font("Verdana", 10);
-
-            // вызываем MeasureString, чтобы померить размеры текста
-            var size = g.MeasureString(text, font);
-
-            // рисуем подложнку под текст
-            g.FillRectangle(
-                new SolidBrush(Color.Red),
-                X - size.Width / 2, // так как я выравнивал текст по центру то подложка должна быть центрирована относительно X,Y
-                Y - size.Height / 2,
-                size.Width,
-                size.Height
-            );
-
-            // ну и текст рисую уже на базе переменных
             g.DrawString(
-                text,
-                font,
+                $"Я гравитон\nc силой {Power}",
+                new Font("Arial", 8),
                 new SolidBrush(Color.White),
                 X,
                 Y,
-                stringFormat
+                stringFormat // передаем инфу о выравнивании
             );
         }
     }

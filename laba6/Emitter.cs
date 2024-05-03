@@ -114,5 +114,10 @@ namespace laba6
                 point.Render(g);
             }
         }
+
+        public int GetTotalParticlesCount()
+        {
+            return particles.Count(p => p.Life > 0);
+        }
     }
 }
