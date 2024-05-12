@@ -18,6 +18,8 @@ namespace laba6
         public float SpeedY; // скорость перемещения по оси Y
         public float Life; // запас здоровья частицы
 
+        public bool FromTeleport { get; set; }
+
         // добавили генератор случайных чисел
         public static Random rand = new Random();
 

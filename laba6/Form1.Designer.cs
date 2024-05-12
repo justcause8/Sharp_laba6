@@ -47,6 +47,8 @@
             tbLife = new TrackBar();
             cbGraviton = new CheckBox();
             cbTeleport = new CheckBox();
+            tbSizeTeletort = new TrackBar();
+            label5 = new Label();
             ((System.ComponentModel.ISupportInitialize)picDisplay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDirection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDistribution).BeginInit();
@@ -54,6 +56,7 @@
             ((System.ComponentModel.ISupportInitialize)tbGraviton2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbSpeedDeparture).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbLife).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tbSizeTeletort).BeginInit();
             SuspendLayout();
             // 
             // picDisplay
@@ -223,11 +226,33 @@
             cbTeleport.UseVisualStyleBackColor = true;
             cbTeleport.CheckedChanged += cbTeleport_CheckedChanged;
             // 
+            // tbSizeTeletort
+            // 
+            tbSizeTeletort.Location = new Point(432, 510);
+            tbSizeTeletort.Maximum = 100;
+            tbSizeTeletort.Minimum = 10;
+            tbSizeTeletort.Name = "tbSizeTeletort";
+            tbSizeTeletort.Size = new Size(144, 56);
+            tbSizeTeletort.TabIndex = 26;
+            tbSizeTeletort.Value = 10;
+            tbSizeTeletort.Scroll += tbSizeTeletort_Scroll;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(432, 487);
+            label5.Name = "label5";
+            label5.Size = new Size(135, 20);
+            label5.TabIndex = 27;
+            label5.Text = "Размер телепорта";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(799, 730);
+            Controls.Add(label5);
+            Controls.Add(tbSizeTeletort);
             Controls.Add(cbTeleport);
             Controls.Add(cbGraviton);
             Controls.Add(tbLife);
@@ -254,6 +279,7 @@
             ((System.ComponentModel.ISupportInitialize)tbGraviton2).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbSpeedDeparture).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbLife).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tbSizeTeletort).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -278,5 +304,7 @@
         private TrackBar tbLife;
         private CheckBox cbGraviton;
         private CheckBox cbTeleport;
+        private TrackBar tbSizeTeletort;
+        private Label label5;
     }
 }

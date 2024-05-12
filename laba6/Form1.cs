@@ -10,9 +10,9 @@ namespace laba6
 
         private bool isDraggingPoint1 = false;
         private bool isDraggingPoint2 = false;
+        private bool teleportEnabled = false;
 
-        private Teleport teleportEntrance; // точка входа телепорта
-        private Teleport teleportExit; // точка выхода телепорта
+        private Teleport teleport;
 
         public Form1()
         {
@@ -81,7 +81,6 @@ namespace laba6
 
 
 
-
         private void tbGraviton_Scroll(object sender, EventArgs e)
         {
             point1.Power = tbGraviton.Value;
@@ -130,26 +129,6 @@ namespace laba6
             }
         }
 
-        /*private void picDisplay_MouseDown(object sender, MouseEventArgs e)
-        {
-            // Проверяем, попали ли мы в область гравитона point1
-            if (point1 != null && e.Button == MouseButtons.Left &&
-                Math.Abs(e.X - point1.X) <= point1.Power / 2 &&
-                Math.Abs(e.Y - point1.Y) <= point1.Power / 2)
-            {
-                isDraggingPoint1 = true;
-            }
-
-            // Проверяем, попали ли мы в область гравитона point2
-            if (point2 != null && e.Button == MouseButtons.Left &&
-                Math.Abs(e.X - point2.X) <= point2.Power / 2 &&
-                Math.Abs(e.Y - point2.Y) <= point2.Power / 2)
-            {
-                isDraggingPoint2 = true;
-            }
-        }*/
-
-
         private void picDisplay_MouseDown(object sender, MouseEventArgs e)
         {
             // Проверяем, попали ли мы в область гравитона point1
@@ -168,30 +147,41 @@ namespace laba6
                 isDraggingPoint2 = true;
             }
 
-            // Проверяем, какая кнопка мыши была нажата
-            if (cbTeleport.Checked)
+            if (teleportEnabled)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    // Если нажата левая кнопка мыши, перемещаем вход телепорта
-                    if (teleportEntrance != null)
+                    if (teleport == null)
                     {
-                        teleportEntrance.X = e.X;
-                        teleportEntrance.Y = e.Y;
-                        picDisplay.Invalidate();
+                        teleport = new Teleport(e.X, e.Y, 40);
+                        teleport.ExitX = e.X;
+                        teleport.ExitY = e.Y;
+                        emitters[0].impactPoints.Add(teleport);
+                    }
+                    else
+                    {
+                        teleport.EntranceX = e.X;
+                        teleport.EntranceY = e.Y;
                     }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
-                    // Если нажата правая кнопка мыши, перемещаем выход телепорта
-                    if (teleportExit != null)
+                    if (teleport == null)
                     {
-                        teleportExit.X = e.X;
-                        teleportExit.Y = e.Y;
-                        picDisplay.Invalidate();
+                        teleport = new Teleport(e.X, e.Y, 40);
+                        teleport.X = e.X;
+                        teleport.Y = e.Y;
+                        emitters[0].impactPoints.Add(teleport);
+                    }
+                    else
+                    {
+                        teleport.ExitX = e.X;
+                        teleport.ExitY = e.Y;
                     }
                 }
+
             }
+            picDisplay.Invalidate();
         }
 
 
@@ -220,44 +210,25 @@ namespace laba6
         }
 
 
-
-
         private void cbTeleport_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbTeleport.Checked)
+            teleportEnabled = cbTeleport.Checked;
+            if (!teleportEnabled && teleport != null)
             {
-                // Создаем точку входа телепорта
-                teleportEntrance = new Teleport
-                {
-                    X = picDisplay.Width / 2, // По умолчанию располагаем в центре окна
-                    Y = picDisplay.Height / 2,
-                    IsEntrance = true
-                };
-
-                // Создаем точку выхода телепорта
-                teleportExit = new Teleport
-                {
-                    X = picDisplay.Width / 2 + 100, // По умолчанию располагаем справа от точки входа
-                    Y = picDisplay.Height / 2,
-                    IsEntrance = false
-                };
-
-                // Добавляем точки телепорта в список impactPoints эмиттера
-                emitter.impactPoints.Add(teleportEntrance);
-                emitter.impactPoints.Add(teleportExit);
+                emitters[0].impactPoints.Remove(teleport);
+                teleport = null;
+                picDisplay.Invalidate();
             }
-            else
+        }
+
+        private void tbSizeTeletort_Scroll(object sender, EventArgs e)
+        {
+            // Обновите радиус телепорта при изменении значения TrackBar
+            if (teleport != null)
             {
-                // Удаляем точки телепорта из списка impactPoints эмиттера
-                emitter.impactPoints.Remove(teleportEntrance);
-                emitter.impactPoints.Remove(teleportExit);
-
-                // Очищаем ссылки на точки телепорта
-                teleportEntrance = null;
-                teleportExit = null;
+                teleport.Radius = tbSizeTeletort.Value;
+                picDisplay.Invalidate(); // Перерисовка PictureBox
             }
-
-            picDisplay.Invalidate(); // Перерисовываем изображение
         }
     }
 }
