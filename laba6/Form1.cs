@@ -11,13 +11,16 @@ namespace laba6
         private bool isDraggingPoint1 = false;
         private bool isDraggingPoint2 = false;
         private bool teleportEnabled = false;
+        private bool isDraggingAntiGravityPoint1 = false;
 
+        private AntiGravityPoint antiGravityPoint;
         private Teleport teleport;
 
         public Form1()
         {
             InitializeComponent();
             picDisplay.Image = new Bitmap(picDisplay.Width, picDisplay.Height);
+            picDisplay.MouseWheel += picDisplay_MouseWheel;
 
             this.emitter = new Emitter
             {
@@ -181,6 +184,16 @@ namespace laba6
                 }
 
             }
+
+            // Проверяем, попали ли мы в область AntiGravityPoint1
+            var antiGravityPoint1 = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
+            if (antiGravityPoint1 != null && e.Button == MouseButtons.Left &&
+                Math.Abs(e.X - antiGravityPoint1.X) <= antiGravityPoint1.Power &&
+                Math.Abs(e.Y - antiGravityPoint1.Y) <= antiGravityPoint1.Power)
+            {
+                isDraggingAntiGravityPoint1 = true;
+            }
+
             picDisplay.Invalidate();
         }
 
@@ -201,12 +214,25 @@ namespace laba6
                 point2.Y = e.Y;
                 picDisplay.Invalidate();
             }
+
+            // Передвижение AntiGravityPoint1
+            if (isDraggingAntiGravityPoint1)
+            {
+                var antiGravityPoint1 = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
+                if (antiGravityPoint1 != null)
+                {
+                    antiGravityPoint1.X = e.X;
+                    antiGravityPoint1.Y = e.Y;
+                    picDisplay.Invalidate();
+                }
+            }
         }
 
         private void picDisplay_MouseUp(object sender, MouseEventArgs e)
         {
             isDraggingPoint1 = false;
             isDraggingPoint2 = false;
+            isDraggingAntiGravityPoint1 = false;
         }
 
 
@@ -229,6 +255,57 @@ namespace laba6
                 teleport.Radius = tbSizeTeletort.Value;
                 picDisplay.Invalidate(); // Перерисовка PictureBox
             }
+        }
+
+
+        private void picDisplay_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var antiGravityPoint = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
+
+            if (antiGravityPoint != null)
+            {
+                // Изменяем радиус и силу отталкивания при движении колесика мыши
+                if (e.Delta > 0)
+                {
+                    antiGravityPoint.Radius += 5;
+                    antiGravityPoint.Power += 5;
+                }
+                else
+                {
+                    antiGravityPoint.Radius = Math.Max(0, antiGravityPoint.Radius - 5);
+                    antiGravityPoint.Power = Math.Max(0, antiGravityPoint.Power - 5);
+                }
+
+                picDisplay.Invalidate(); // Перерисовываем PictureBox
+            }
+        }
+
+        private void cbAntiGravity_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+
+            if (checkBox.Checked)
+            {
+                var antiGravityPoint1 = new AntiGravityPoint
+                {
+                    X = picDisplay.Width / 2 + 50,
+                    Y = picDisplay.Height / 2,
+                    Power = 100
+                };
+
+                emitters[0].impactPoints.Add(antiGravityPoint1);
+            }
+            else
+            {
+                emitters[0].impactPoints.RemoveAll(point => point is AntiGravityPoint);
+            }
+
+            picDisplay.Invalidate(); // Перерисовываем PictureBox
+        }
+
+        private void cbCounter_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

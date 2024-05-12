@@ -49,6 +49,8 @@
             cbTeleport = new CheckBox();
             tbSizeTeletort = new TrackBar();
             label5 = new Label();
+            cbAntiGravity = new CheckBox();
+            cbCounter = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)picDisplay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDirection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDistribution).BeginInit();
@@ -246,11 +248,35 @@
             label5.TabIndex = 27;
             label5.Text = "Размер телепорта";
             // 
+            // cbAntiGravity
+            // 
+            cbAntiGravity.AutoSize = true;
+            cbAntiGravity.Location = new Point(442, 562);
+            cbAntiGravity.Name = "cbAntiGravity";
+            cbAntiGravity.Size = new Size(132, 24);
+            cbAntiGravity.TabIndex = 28;
+            cbAntiGravity.Text = "Отталкиватель";
+            cbAntiGravity.UseVisualStyleBackColor = true;
+            cbAntiGravity.CheckedChanged += cbAntiGravity_CheckedChanged;
+            // 
+            // cbCounter
+            // 
+            cbCounter.AutoSize = true;
+            cbCounter.Location = new Point(442, 601);
+            cbCounter.Name = "cbCounter";
+            cbCounter.Size = new Size(86, 24);
+            cbCounter.TabIndex = 29;
+            cbCounter.Text = "Счетчик";
+            cbCounter.UseVisualStyleBackColor = true;
+            cbCounter.CheckedChanged += cbCounter_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(799, 730);
+            Controls.Add(cbCounter);
+            Controls.Add(cbAntiGravity);
             Controls.Add(label5);
             Controls.Add(tbSizeTeletort);
             Controls.Add(cbTeleport);
@@ -306,5 +332,7 @@
         private CheckBox cbTeleport;
         private TrackBar tbSizeTeletort;
         private Label label5;
+        private CheckBox cbAntiGravity;
+        private CheckBox cbCounter;
     }
 }
