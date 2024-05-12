@@ -13,6 +13,15 @@ namespace laba6
 
         private Random random = new Random();
 
+        // В вашем классе Teleport создайте массив из четырех цветов
+        Color[] teleportColors = new Color[]
+        {
+            Color.FromArgb(34, 40, 49),     // 222831
+            Color.FromArgb(57, 62, 70),     // 393E46
+            Color.FromArgb(0, 173, 181),    // 00ADB5
+            Color.FromArgb(238, 238, 238)   // EEEEEE
+        };
+
         public Teleport(float entranceX, float entranceY,float radius)
         {
             EntranceX = entranceX;
@@ -23,31 +32,42 @@ namespace laba6
         public override void ImpactParticle(Particle particle)
         {
             float distanceToEntrance = (float)Math.Sqrt(Math.Pow(EntranceX - particle.X, 2) + Math.Pow(EntranceY - particle.Y, 2));
-            particle.FromTeleport = true;
+            float distanceToExit = (float)Math.Sqrt(Math.Pow(ExitX - particle.X, 2) + Math.Pow(ExitY - particle.Y, 2));
 
             if (distanceToEntrance <= Radius)
             {
+                // Частица попала в радиус действия входного телепорта
+                particle.FromTeleport = true;
+
                 // Генерируем случайный угол для направления вылета
                 double randomAngle = random.NextDouble() * 2 * Math.PI;
 
                 // Вычисляем новые координаты частицы на основе сгенерированного угла
                 particle.X = ExitX + (float)(Radius * Math.Cos(randomAngle));
                 particle.Y = ExitY + (float)(Radius * Math.Sin(randomAngle));
-
-                /*// Изменяем цвет только для частиц, выходящих из телепорта
-                if (particle is ParticleColorful colorfulParticle)
+            }
+            else if (distanceToExit <= Radius)
+            {
+                // Частица выходит из телепорта и меняет цвет
+                if (particle.FromTeleport)
                 {
-                    colorfulParticle.FromColor = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
-                    colorfulParticle.ToColor = Color.FromArgb(0, colorfulParticle.FromColor);
-                }*/
+                    if (particle is ParticleColorful colorfulParticle)
+                    {
+                        // Выбираем случайный цвет из массива
+                        Random rnd = new Random();
+                        int index = rnd.Next(teleportColors.Length);
+                        colorfulParticle.FromColor = teleportColors[index];
+                        colorfulParticle.ToColor = Color.FromArgb(0, colorfulParticle.FromColor);
+                    }
+                    // Сбрасываем флаг FromTeleport для предотвращения повторного окрашивания
+                    particle.FromTeleport = false;
+                }
             }
         }
 
+
         public override void Render(Graphics g)
         {
-            // Рисуем окружность для обозначения радиуса действия телепорта
-            g.DrawEllipse(Pens.Blue, EntranceX - Radius, EntranceY - Radius, Radius * 2, Radius * 2);
-
             // Рисуем круг для обозначения положения точки входа телепорта
             g.DrawEllipse(Pens.Blue, EntranceX - Radius, EntranceY - Radius, Radius * 2, Radius * 2);
 

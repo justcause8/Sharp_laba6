@@ -50,7 +50,15 @@ namespace laba6
             particle.SpeedY = -(float)(Math.Sin(direction / 180 * Math.PI) * speed);
 
             particle.Radius = Particle.rand.Next(RadiusMin, RadiusMax);
+
+            // Установка начального цвета для частицы
+            if (particle is ParticleColorful colorfulParticle)
+            {
+                colorfulParticle.FromColor = ColorFrom;
+                colorfulParticle.ToColor = ColorTo;
+            }
         }
+
 
         public virtual Particle CreateParticle()
         {
