@@ -1,3 +1,5 @@
+using static System.Windows.Forms.AxHost;
+
 namespace laba6
 {
     public partial class Form1 : Form
@@ -5,16 +7,20 @@ namespace laba6
         List<Emitter> emitters = new List<Emitter>();
         Emitter emitter;
 
-        GravityPoint point1;
-        GravityPoint point2;
+        private GravityPoint point1;
+        private GravityPoint point2;
+        
+        private AntiGravityPoint antiGravityPoint;
+        private Teleport teleport;
 
         private bool isDraggingPoint1 = false;
         private bool isDraggingPoint2 = false;
         private bool teleportEnabled = false;
         private bool isDraggingAntiGravityPoint1 = false;
+        private bool isDraggingRadar = false;
 
-        private AntiGravityPoint antiGravityPoint;
-        private Teleport teleport;
+        private int startX; // Начальная позиции X при перемещении радара
+        private int startY; // Начальная позиции Y при перемещении радара
 
         public Form1()
         {
@@ -194,6 +200,17 @@ namespace laba6
                 isDraggingAntiGravityPoint1 = true;
             }
 
+            // Проверяем, попали ли мы в область радара и нажали левую кнопку мыши
+            var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
+            if (radar != null && e.Button == MouseButtons.Left &&
+                Math.Abs(e.X - radar.X) <= radar.Radius &&
+                Math.Abs(e.Y - radar.Y) <= radar.Radius)
+            {
+                isDraggingRadar = true; // Устанавливаем флаг перемещения радара
+                startX = e.X; // Запоминаем начальную позицию X
+                startY = e.Y; // Запоминаем начальную позицию Y
+            }
+
             picDisplay.Invalidate();
         }
 
@@ -215,7 +232,6 @@ namespace laba6
                 picDisplay.Invalidate();
             }
 
-            // Передвижение AntiGravityPoint1
             if (isDraggingAntiGravityPoint1)
             {
                 var antiGravityPoint1 = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
@@ -226,6 +242,26 @@ namespace laba6
                     picDisplay.Invalidate();
                 }
             }
+
+            if (isDraggingRadar)
+            {
+                var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
+                if (radar != null)
+                {
+                    // Вычисляем смещение относительно начальной позиции
+                    float deltaX = e.X - startX;
+                    float deltaY = e.Y - startY;
+
+                    // Обновляем координаты радара
+                    radar.X += deltaX;
+                    radar.Y += deltaY;
+
+                    startX = e.X; // Обновляем начальную позицию X для следующего перемещения
+                    startY = e.Y; // Обновляем начальную позицию Y для следующего перемещения
+
+                    picDisplay.Invalidate(); // Перерисовываем PictureBox
+                }
+            }
         }
 
         private void picDisplay_MouseUp(object sender, MouseEventArgs e)
@@ -233,6 +269,7 @@ namespace laba6
             isDraggingPoint1 = false;
             isDraggingPoint2 = false;
             isDraggingAntiGravityPoint1 = false;
+            isDraggingRadar = false;
         }
 
 
@@ -276,6 +313,23 @@ namespace laba6
                     antiGravityPoint.Power = Math.Max(0, antiGravityPoint.Power - 5);
                 }
 
+                picDisplay.Invalidate();
+            }
+
+            var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
+
+            if (radar != null)
+            {
+                // Изменяем радиус радара при движении колесика мыши
+                if (e.Delta > 0)
+                {
+                    radar.Radius += 5;
+                }
+                else
+                {
+                    radar.Radius = Math.Max(0, radar.Radius - 5);
+                }
+
                 picDisplay.Invalidate(); // Перерисовываем PictureBox
             }
         }
@@ -303,9 +357,41 @@ namespace laba6
             picDisplay.Invalidate(); // Перерисовываем PictureBox
         }
 
-        private void cbCounter_CheckedChanged(object sender, EventArgs e)
-        {
 
+        private void cbRadar_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+
+            if (checkBox.Checked)
+            {
+                // Создаем и добавляем радар на форму
+                Radar radar = new Radar
+                {
+                    X = picDisplay.Width / 2 + 100, // Примерные координаты радара
+                    Y = picDisplay.Height / 2,
+                    Radius = 50 // Примерный радиус радара
+                };
+
+                emitters[0].impactPoints.Add(radar); // Добавляем радар на форму
+            }
+            else
+            {
+                // Удаляем радар из списка воздействия эмиттера
+                emitters[0].impactPoints.RemoveAll(point => point is Radar);
+
+                // Удаляем радар из контейнера Controls, если он был добавлен
+                foreach (Control control in this.Controls)
+                {
+                    if (control is Radar)
+                    {
+                        this.Controls.Remove(control);
+                        break; // Прерываем цикл, если радар был удален
+                    }
+                }
+            }
+
+            picDisplay.Invalidate(); // Перерисовываем picDisplay
         }
+
     }
 }

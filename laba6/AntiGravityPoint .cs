@@ -5,22 +5,22 @@ namespace laba6
 {
     public class AntiGravityPoint : IImpactPoint
     {
-        public float X;
-        public float Y;
+        public float X { get; set; }
+        public float Y { get; set; }
+        public int Radius; 
         public int Power;
-        public int Radius;
 
         // Метод для обработки столкновения частиц с точкой отталкивания
         public override void ImpactParticle(Particle particle)
         {
-            float gX = particle.X - X; // Изменен знак для создания вектора, направленного от AntiGravityPoint к частице
-            float gY = particle.Y - Y; // Изменен знак для создания вектора, направленного от AntiGravityPoint к частице
+            float gX = particle.X - X;
+            float gY = particle.Y - Y;
             float distanceSquared = gX * gX + gY * gY;
 
             if (distanceSquared < Power * Power)
             {
                 double angle = Math.Atan2(particle.SpeedY, particle.SpeedX);
-                double reflectionAngle = Math.Atan2(gY, gX); // Здесь знаки не меняются, чтобы получить угол отражения
+                double reflectionAngle = Math.Atan2(gY, gX);
 
                 double totalSpeed = Math.Sqrt(particle.SpeedX * particle.SpeedX + particle.SpeedY * particle.SpeedY);
 

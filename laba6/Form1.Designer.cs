@@ -50,7 +50,7 @@
             tbSizeTeletort = new TrackBar();
             label5 = new Label();
             cbAntiGravity = new CheckBox();
-            cbCounter = new CheckBox();
+            cbRadar = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)picDisplay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDirection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbDistribution).BeginInit();
@@ -259,23 +259,23 @@
             cbAntiGravity.UseVisualStyleBackColor = true;
             cbAntiGravity.CheckedChanged += cbAntiGravity_CheckedChanged;
             // 
-            // cbCounter
+            // cbRadar
             // 
-            cbCounter.AutoSize = true;
-            cbCounter.Location = new Point(442, 601);
-            cbCounter.Name = "cbCounter";
-            cbCounter.Size = new Size(86, 24);
-            cbCounter.TabIndex = 29;
-            cbCounter.Text = "Счетчик";
-            cbCounter.UseVisualStyleBackColor = true;
-            cbCounter.CheckedChanged += cbCounter_CheckedChanged;
+            cbRadar.AutoSize = true;
+            cbRadar.Location = new Point(442, 601);
+            cbRadar.Name = "cbRadar";
+            cbRadar.Size = new Size(72, 24);
+            cbRadar.TabIndex = 29;
+            cbRadar.Text = "Радар";
+            cbRadar.UseVisualStyleBackColor = true;
+            cbRadar.CheckedChanged += cbRadar_CheckedChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(799, 730);
-            Controls.Add(cbCounter);
+            Controls.Add(cbRadar);
             Controls.Add(cbAntiGravity);
             Controls.Add(label5);
             Controls.Add(tbSizeTeletort);
@@ -333,6 +333,6 @@
         private TrackBar tbSizeTeletort;
         private Label label5;
         private CheckBox cbAntiGravity;
-        private CheckBox cbCounter;
+        private CheckBox cbRadar;
     }
 }

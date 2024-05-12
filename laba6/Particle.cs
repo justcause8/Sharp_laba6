@@ -18,6 +18,8 @@ namespace laba6
         public float SpeedY; // скорость перемещения по оси Y
         public float Life; // запас здоровья частицы
 
+        public Color InitialColor { get; set; }// Добавляем свойство для хранения исходного цвета частицы
+        public bool IsInRadarArea { get; set; }
         public bool FromTeleport { get; set; }
 
         // добавили генератор случайных чисел
