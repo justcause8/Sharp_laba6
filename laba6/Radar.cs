@@ -6,13 +6,10 @@ namespace laba6
 {
     public class Radar : IImpactPoint
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Radius { get; set; } // Радиус радара
+        public float X;
+        public float Y;
+        public float Radius; // Радиус радара
         private List<Particle> particlesInsideRadar = new List<Particle>(); // Список частиц внутри радара
-
-        // Добавляем свойство для цвета подсветки
-        public Color HighlightColor { get; set; } = Color.Yellow;
 
         // Метод для воздействия на частицу
         public override void ImpactParticle(Particle particle)
@@ -30,8 +27,8 @@ namespace laba6
                     if (particle is ParticleColorful colorfulParticle)
                     {
                         // Устанавливаем красный цвет
-                        colorfulParticle.FromColor = Color.LimeGreen;
-                        colorfulParticle.ToColor = Color.LimeGreen;
+                        colorfulParticle.FromColor = Color.Red;
+                        colorfulParticle.ToColor = Color.Red;
                     }
                 }
             }
@@ -52,8 +49,6 @@ namespace laba6
                 }
             }
         }
-
-
 
 
         // Метод для отрисовки радара

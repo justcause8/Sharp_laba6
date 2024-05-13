@@ -132,6 +132,7 @@
             // 
             // tbGraviton
             // 
+            tbGraviton.Enabled = false;
             tbGraviton.Location = new Point(268, 510);
             tbGraviton.Maximum = 100;
             tbGraviton.Name = "tbGraviton";
@@ -150,6 +151,7 @@
             // 
             // tbGraviton2
             // 
+            tbGraviton2.Enabled = false;
             tbGraviton2.Location = new Point(268, 586);
             tbGraviton2.Maximum = 100;
             tbGraviton2.Name = "tbGraviton2";
@@ -230,6 +232,7 @@
             // 
             // tbSizeTeletort
             // 
+            tbSizeTeletort.Enabled = false;
             tbSizeTeletort.Location = new Point(432, 510);
             tbSizeTeletort.Maximum = 100;
             tbSizeTeletort.Minimum = 10;
@@ -297,7 +300,7 @@
             Controls.Add(tbDirection);
             Controls.Add(picDisplay);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Частицы";
             ((System.ComponentModel.ISupportInitialize)picDisplay).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbDirection).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbDistribution).EndInit();

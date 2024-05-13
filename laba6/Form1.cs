@@ -4,30 +4,42 @@ namespace laba6
 {
     public partial class Form1 : Form
     {
+        // Список эмиттеров на форме
         List<Emitter> emitters = new List<Emitter>();
+        // Текущий эмиттер
         Emitter emitter;
 
+        // Гравитационные точки
         private GravityPoint point1;
         private GravityPoint point2;
-        
+
+        // Антигравитационная точка и телепорт
         private AntiGravityPoint antiGravityPoint;
         private Teleport teleport;
+        private Radar radar;
 
+        // Флаги для отслеживания действий пользователя
         private bool isDraggingPoint1 = false;
         private bool isDraggingPoint2 = false;
         private bool teleportEnabled = false;
         private bool isDraggingAntiGravityPoint1 = false;
         private bool isDraggingRadar = false;
 
-        private int startX; // Начальная позиции X при перемещении радара
-        private int startY; // Начальная позиции Y при перемещении радара
+        // Начальные координаты для перемещения радара
+        private int startX;
+        private int startY;
 
+        // Конструктор формы
         public Form1()
         {
+            // Инициализация компонентов формы
             InitializeComponent();
+            // Создание изображения для PictureBox
             picDisplay.Image = new Bitmap(picDisplay.Width, picDisplay.Height);
+            // Привязка обработчика события колесика мыши к методу
             picDisplay.MouseWheel += picDisplay_MouseWheel;
 
+            // Создание и настройка первого эмиттера
             this.emitter = new Emitter
             {
                 Direction = 0,
@@ -41,11 +53,14 @@ namespace laba6
                 Y = picDisplay.Height / 2,
             };
 
+            // Добавление эмиттера в список
             emitters.Add(this.emitter);
         }
 
+        // Метод, вызываемый при срабатывании таймера
         private void timer1_Tick(object sender, EventArgs e)
         {
+            // Обновление состояния эмиттера и перерисовка
             emitter.UpdateState();
             using (var g = Graphics.FromImage(picDisplay.Image))
             {
@@ -55,22 +70,26 @@ namespace laba6
             picDisplay.Invalidate();
         }
 
-
-
+        // Метод, вызываемый при изменении положения ползунка направления
         private void tbDirection_Scroll(object sender, EventArgs e)
         {
+            // Обновление направления эмиттера и текста метки
             emitter.Direction = tbDirection.Value;
             lblDirection.Text = $"{tbDirection.Value}°";
         }
 
+        // Метод, вызываемый при изменении положения ползунка разброса
         private void tbDistribution_Scroll(object sender, EventArgs e)
         {
+            // Обновление разброса эмиттера и текста метки
             emitter.Spreading = tbDistribution.Value;
             lblDistribution.Text = $"{tbDistribution.Value}°";
         }
 
+        // Метод, вызываемый при изменении положения ползунка скорости
         private void tbSpeedDeparture_Scroll(object sender, EventArgs e)
         {
+            // Обновление скорости эмиттера
             if (emitter != null)
             {
                 emitter.SpeedMin = tbSpeedDeparture.Value;
@@ -78,8 +97,10 @@ namespace laba6
             }
         }
 
+        // Метод, вызываемый при изменении положения ползунка времени жизни частиц
         private void tbLife_Scroll(object sender, EventArgs e)
         {
+            // Обновление времени жизни частиц и перерисовка
             if (emitter != null)
             {
                 emitter.LifeMin = tbLife.Value / 5;
@@ -88,23 +109,27 @@ namespace laba6
             }
         }
 
-
-
+        // Метод, вызываемый при изменении положения ползунка силы гравитации для точки 1
         private void tbGraviton_Scroll(object sender, EventArgs e)
         {
+            // Обновление силы гравитации для точки 1
             point1.Power = tbGraviton.Value;
         }
 
+        // Метод, вызываемый при изменении положения ползунка силы гравитации для точки 2
         private void tbGraviton2_Scroll(object sender, EventArgs e)
         {
+            // Обновление силы гравитации для точки 2
             point2.Power = tbGraviton2.Value;
         }
 
+        // Метод, вызываемый при изменении состояния флажка гравитационных точек
         private void cbGraviton_CheckedChanged(object sender, EventArgs e)
         {
+            // Добавление или удаление гравитационных точек в зависимости от состояния флажка
             if (cbGraviton.Checked)
             {
-                // Создание и добавление гравитона point1
+                // Создание и добавление гравитационной точки 1
                 point1 = new GravityPoint
                 {
                     X = picDisplay.Width / 2 + 100,
@@ -112,34 +137,44 @@ namespace laba6
                 };
                 emitter.impactPoints.Add(point1);
 
-                // Создание и добавление гравитона point2
+                // Создание и добавление гравитационной точки 2
                 point2 = new GravityPoint
                 {
                     X = picDisplay.Width / 2 - 100,
                     Y = picDisplay.Height / 2,
                 };
                 emitter.impactPoints.Add(point2);
+
+                // Разблокировка tbGraviton и tbGraviton2
+                tbGraviton.Enabled = true;
+                tbGraviton2.Enabled = true;
             }
             else
             {
-                // Удаление гравитона point1, если он существует
+                // Удаление гравитационной точки 1, если она существует
                 if (point1 != null)
                 {
                     emitter.impactPoints.Remove(point1);
                     point1 = null;
                 }
 
-                // Удаление гравитона point2, если он существует
+                // Удаление гравитационной точки 2, если она существует
                 if (point2 != null)
                 {
                     emitter.impactPoints.Remove(point2);
                     point2 = null;
                 }
+
+                // Блокировка tbGraviton и tbGraviton2
+                tbGraviton.Enabled = false;
+                tbGraviton2.Enabled = false;
             }
         }
 
+        // Метод, вызываемый при нажатии кнопки мыши на PictureBox
         private void picDisplay_MouseDown(object sender, MouseEventArgs e)
         {
+            // Логика для перетаскивания гравитационных точек, телепорта, антигравитационной точки и радара
             // Проверяем, попали ли мы в область гравитона point1
             if (point1 != null && e.Button == MouseButtons.Left &&
                 Math.Abs(e.X - point1.X) <= point1.Power / 2 &&
@@ -192,16 +227,14 @@ namespace laba6
             }
 
             // Проверяем, попали ли мы в область AntiGravityPoint1
-            var antiGravityPoint1 = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
-            if (antiGravityPoint1 != null && e.Button == MouseButtons.Left &&
-                Math.Abs(e.X - antiGravityPoint1.X) <= antiGravityPoint1.Power &&
-                Math.Abs(e.Y - antiGravityPoint1.Y) <= antiGravityPoint1.Power)
+            if (antiGravityPoint != null && e.Button == MouseButtons.Left &&
+                Math.Abs(e.X - antiGravityPoint.X) <= antiGravityPoint.Power &&
+                Math.Abs(e.Y - antiGravityPoint.Y) <= antiGravityPoint.Power)
             {
                 isDraggingAntiGravityPoint1 = true;
             }
 
             // Проверяем, попали ли мы в область радара и нажали левую кнопку мыши
-            var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
             if (radar != null && e.Button == MouseButtons.Left &&
                 Math.Abs(e.X - radar.X) <= radar.Radius &&
                 Math.Abs(e.Y - radar.Y) <= radar.Radius)
@@ -214,10 +247,10 @@ namespace laba6
             picDisplay.Invalidate();
         }
 
-
-
+        // Метод, вызываемый при перемещении мыши по PictureBox
         private void picDisplay_MouseMove(object sender, MouseEventArgs e)
         {
+            // Логика для обновления положения гравитационных точек, телепорта, антигравитационной точки и радара
             if (isDraggingPoint1)
             {
                 point1.X = e.X;
@@ -234,18 +267,16 @@ namespace laba6
 
             if (isDraggingAntiGravityPoint1)
             {
-                var antiGravityPoint1 = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
-                if (antiGravityPoint1 != null)
+                if (antiGravityPoint != null)
                 {
-                    antiGravityPoint1.X = e.X;
-                    antiGravityPoint1.Y = e.Y;
+                    antiGravityPoint.X = e.X;
+                    antiGravityPoint.Y = e.Y;
                     picDisplay.Invalidate();
                 }
             }
 
             if (isDraggingRadar)
             {
-                var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
                 if (radar != null)
                 {
                     // Вычисляем смещение относительно начальной позиции
@@ -264,17 +295,20 @@ namespace laba6
             }
         }
 
+        // Метод, вызываемый при отпускании кнопки мыши на PictureBox
         private void picDisplay_MouseUp(object sender, MouseEventArgs e)
         {
+            // Сброс флагов перетаскивания
             isDraggingPoint1 = false;
             isDraggingPoint2 = false;
             isDraggingAntiGravityPoint1 = false;
             isDraggingRadar = false;
         }
 
-
+        // Метод, вызываемый при изменении состояния флажка телепорта
         private void cbTeleport_CheckedChanged(object sender, EventArgs e)
         {
+            // Включение или выключение телепорта в зависимости от состояния флажка
             teleportEnabled = cbTeleport.Checked;
             if (!teleportEnabled && teleport != null)
             {
@@ -282,11 +316,15 @@ namespace laba6
                 teleport = null;
                 picDisplay.Invalidate();
             }
+
+            // Включение или выключение элемента управления tbSizeTeletort
+            tbSizeTeletort.Enabled = cbTeleport.Checked;
         }
 
+        // Метод, вызываемый при изменении положения ползунка радиуса телепорта
         private void tbSizeTeletort_Scroll(object sender, EventArgs e)
         {
-            // Обновите радиус телепорта при изменении значения TrackBar
+            // Обновление радиуса телепорта при изменении значения TrackBar
             if (teleport != null)
             {
                 teleport.Radius = tbSizeTeletort.Value;
@@ -294,10 +332,11 @@ namespace laba6
             }
         }
 
-
+        // Метод, вызываемый при прокрутке колесика мыши на PictureBox
         private void picDisplay_MouseWheel(object sender, MouseEventArgs e)
         {
-            var antiGravityPoint = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
+            // Логика для изменения радиуса и силы антигравитационной точки и радара при прокрутке колесика мыши
+            antiGravityPoint = emitters[0].impactPoints.FirstOrDefault(point => point is AntiGravityPoint) as AntiGravityPoint;
 
             if (antiGravityPoint != null)
             {
@@ -305,7 +344,7 @@ namespace laba6
                 if (e.Delta > 0)
                 {
                     antiGravityPoint.Radius += 5;
-                    antiGravityPoint.Power += 5;
+                    antiGravityPoint.Power += 20;
                 }
                 else
                 {
@@ -315,8 +354,6 @@ namespace laba6
 
                 picDisplay.Invalidate();
             }
-
-            var radar = emitters[0].impactPoints.FirstOrDefault(point => point is Radar) as Radar;
 
             if (radar != null)
             {
@@ -334,8 +371,10 @@ namespace laba6
             }
         }
 
+        // Метод, вызываемый при изменении состояния флажка антигравитационной точки
         private void cbAntiGravity_CheckedChanged(object sender, EventArgs e)
         {
+            // Включение или выключение антигравитационной точки в зависимости от состояния флажка
             CheckBox checkBox = (CheckBox)sender;
 
             if (checkBox.Checked)
@@ -358,14 +397,16 @@ namespace laba6
         }
 
 
+        // Метод, вызываемый при изменении состояния флажка радара
         private void cbRadar_CheckedChanged(object sender, EventArgs e)
         {
+            // Включение или выключение радара в зависимости от состояния флажка
             CheckBox checkBox = (CheckBox)sender;
 
             if (checkBox.Checked)
             {
                 // Создаем и добавляем радар на форму
-                Radar radar = new Radar
+                radar = new Radar
                 {
                     X = picDisplay.Width / 2 + 100, // Примерные координаты радара
                     Y = picDisplay.Height / 2,
@@ -392,6 +433,5 @@ namespace laba6
 
             picDisplay.Invalidate(); // Перерисовываем picDisplay
         }
-
     }
 }

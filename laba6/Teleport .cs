@@ -5,11 +5,11 @@ namespace laba6
 {
     public class Teleport : IImpactPoint
     {
-        public float EntranceX { get; set; }
-        public float EntranceY { get; set; }
-        public float ExitX { get; set; }
-        public float ExitY { get; set; }
-        public float Radius { get; set; }
+        public float EntranceX;
+        public float EntranceY;
+        public float ExitX;
+        public float ExitY;
+        public float Radius;
 
         private Random random = new Random();
 

@@ -18,9 +18,9 @@ namespace laba6
         public float SpeedY; // скорость перемещения по оси Y
         public float Life; // запас здоровья частицы
 
-        public Color InitialColor { get; set; }// Добавляем свойство для хранения исходного цвета частицы
-        public bool IsInRadarArea { get; set; }
-        public bool FromTeleport { get; set; }
+        public Color InitialColor;
+        public bool IsInRadarArea;
+        public bool FromTeleport;
 
         // добавили генератор случайных чисел
         public static Random rand = new Random();
@@ -36,7 +36,6 @@ namespace laba6
             SpeedX = (float)(Math.Cos(direction / 180 * Math.PI) * speed);
             SpeedY = -(float)(Math.Sin(direction / 180 * Math.PI) * speed);
 
-            // а это не трогаем
             Radius = 2 + rand.Next(10);
             Life = 20 + rand.Next(100);
         }

@@ -5,8 +5,8 @@ namespace laba6
 {
     public class AntiGravityPoint : IImpactPoint
     {
-        public float X { get; set; }
-        public float Y { get; set; }
+        public float X;
+        public float Y;
         public int Radius; 
         public int Power;
 
@@ -29,7 +29,6 @@ namespace laba6
                 particle.SpeedY = (float)(totalSpeed * Math.Sin(reflectionAngle));
             }
         }
-
 
 
         // Метод для отрисовки области точки отталкивания
